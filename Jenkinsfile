@@ -29,8 +29,8 @@ pipeline {
             steps {
                 echo "Test Stage"
                 sh '''
-                npm install -g server
-                node_modules/.bin/server -s build // does not need root to run
+                npm install -g serve
+                node_modules/.bin/serve -s build // does not need root to run
                 npx playwright test
                 '''
             }
