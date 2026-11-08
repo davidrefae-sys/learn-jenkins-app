@@ -1,62 +1,76 @@
 pipeline {
     agent any
-    stages {
 
-        stage ("Run test") {
+    stages {
+        /*
+
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+        */
+
+        stage('Tests') {
             parallel {
-                stage('Build') {
+                stage('Unit tests') {
                     agent {
                         docker {
-                            image 'node:22-alpine'
+                            image 'node:18-alpine'
                             reuseNode true
                         }
                     }
+
                     steps {
                         sh '''
-                        npm test
+                            #test -f build/index.html
+                            npm test
                         '''
                     }
                     post {
-                    always {
-                        junit allowEmptyResults: true, testResults: 'playwright-results/junit.xml'
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
                     }
                 }
-                }
-                stage("E2E"){
+
+                stage('E2E') {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                             reuseNode true
-                            // args '-u root:root' // run as root, horrible solution, never do this
                         }
                     }
+
                     steps {
-                        echo "Test Stage"
                         sh '''
-                        npm ci
-                        npm run build
-                        npm install serve
-                        node_modules/.bin/serve -s build &
-                        PLAYWRIGHT_JUNIT_OUTPUT_NAME=playwright-results/junit.xml npx playwright test --reporter=junit
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test  --reporter=html
                         '''
                     }
+
                     post {
-                    always {
-                        publishHTML([
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: false,
-                            keepAll: true,
-                            reportDir: 'playwright-report',
-                            reportFiles: 'index.html',
-                            reportName: 'Playwright HTML Report',
-                            reportTitles: '',
-                            useWrapperFileDirectly: true
-                        ])
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
                     }
-                }
                 }
             }
         }
-
     }
 }
