@@ -10,7 +10,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'Building...'
+                sh 'echo "Building..."'
 				sh '''
                 ls -la
                 node --version
