@@ -16,6 +16,11 @@ pipeline {
                         npm test
                         '''
                     }
+                    post {
+                    always {
+                        junit allowEmptyResults: true, testResults: 'playwright-results/junit.xml'
+                    }
+                }
                 }
                 stage("E2E"){
                     agent {
@@ -35,24 +40,23 @@ pipeline {
                         PLAYWRIGHT_JUNIT_OUTPUT_NAME=playwright-results/junit.xml npx playwright test --reporter=junit
                         '''
                     }
+                    post {
+                    always {
+                        publishHTML([
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: 'playwright-report',
+                            reportFiles: 'index.html',
+                            reportName: 'Playwright HTML Report',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                        ])
+                    }
+                }
                 }
             }
         }
 
     }
-    post {
-    always {
-        junit allowEmptyResults: true, testResults: 'playwright-results/junit.xml'
-        publishHTML([
-            allowMissing: true,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: 'playwright-report',
-            reportFiles: 'index.html',
-            reportName: 'Playwright HTML Report',
-            reportTitles: '',
-            useWrapperFileDirectly: true
-        ])
-    }
-}
 }
