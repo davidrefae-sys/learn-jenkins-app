@@ -31,14 +31,14 @@ pipeline {
                 sh '''
                 npm install serve
                 node_modules/.bin/serve -s build &
-                npx playwright test --reporter=html
+                PLAYWRIGHT_JUNIT_OUTPUT_NAME=playwright-results/junit.xml npx playwright test --reporter=junit
                 '''
             }
         }
     }
     post {
     always {
-        junit 'test-results/junit.xml'
+        junit allowEmptyResults: true, testResults: 'playwright-results/junit.xml'
     }
 }
 }
