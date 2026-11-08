@@ -13,11 +13,7 @@ pipeline {
                     }
                     steps {
                         sh '''
-                        ls -la
-                        node --version
-                        npm --version
-                        npm ci
-                        npm run build
+                        npm test
                         '''
                     }
                 }
@@ -32,6 +28,8 @@ pipeline {
                     steps {
                         echo "Test Stage"
                         sh '''
+                        npm ci
+                        npm run build
                         npm install serve
                         node_modules/.bin/serve -s build &
                         PLAYWRIGHT_JUNIT_OUTPUT_NAME=playwright-results/junit.xml npx playwright test --reporter=junit
