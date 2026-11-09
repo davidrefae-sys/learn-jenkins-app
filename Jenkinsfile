@@ -1,12 +1,14 @@
 pipeline {
     agent any
-
+    environment {
+        NETLIFY_SITE_ID = '4afc3d32-8173-415a-9510-81313199ed52'
+    }
     stages {
 
         stage('setup') {
             agent {
                 docker {
-                    image 'node:25-alpine'
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
@@ -27,7 +29,7 @@ pipeline {
                 stage('Unit tests') {
                     agent {
                         docker {
-                            image 'node:25-alpine'
+                            image 'node:18-alpine'
                             reuseNode true
                         }
                     }
@@ -74,7 +76,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:25-alpine'
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
