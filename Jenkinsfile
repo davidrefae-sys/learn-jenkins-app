@@ -86,6 +86,7 @@ pipeline {
                 }
             }
             steps {
+                echo "Starting Deployment"
                 sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
