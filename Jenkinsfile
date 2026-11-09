@@ -23,6 +23,7 @@ pipeline {
                     npm ci
                     npm run build
                     npm install --save-dev jest-junit
+                    JEST_JUNIT_OUTPUT_DIR=jest-results JEST_JUNIT_OUTPUT_NAME=junit.xml npm test -- --reporters=default --reporters=jest-junit
                     ls -la
                 '''
             }
