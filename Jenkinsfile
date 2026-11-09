@@ -104,9 +104,7 @@ pipeline {
                     }
                 }
                     environment {
-                        NETLIFY_SITE_ID = '4afc3d32-8173-415a-9510-81313199ed52'
-                        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-                        CI_ENVIRONMENT_URL = 'https://sunny-entremet-7fad8d.netlify.app/'
+                        CI_ENVIRONMENT_URL = 'https://sunny-entremet-7fad8d.netlify.app'
                     }
 
                 steps {
